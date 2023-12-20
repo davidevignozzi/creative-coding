@@ -24,7 +24,7 @@ const sketch = () => {
     const h = height * 0.1;
     let x, y;
 
-    const num = 12; // <- number of copies
+    const num = 40; // <- number of copies
     const radius = width * 0.3; // <- radius of the circle
 
     // * This will be the block:
@@ -61,17 +61,41 @@ const sketch = () => {
       context.rotate(-angle);
 
       // context.scale(Math.random() * (3 - 1) + 1, 1); // <- scale x = random number between 1 and 3
-      context.scale(random.range(1, 3), 1);
+      // context.scale(random.range(1, 3), 1);
+      context.scale(random.range(0.1, 2), random.range(0.2, 0.5));
 
       /**
-       *
+       * Shape
        */
       context.beginPath();
       // context.rect(x, y, w, h); // <- will be at the center left (without transform)
-      context.rect(-w * 0.5, -h * 0.5, w, h); // <- if translated (context.translate(x, y)) will be to the center
+      // context.rect(-w * 0.5, -h * 0.5, w, h); // <- if translated (context.translate(x, y)) will be to the center
+      context.rect(-w * 0.5, random.range(0, -h * 0.5) * 0.5, w, h);
       context.fill();
 
       context.restore(); // <- restore the state of the context. In this way if i will create another figure, it will have the origin at [0, 0] (in the high left corner)
+
+      /**
+       * new block -> Arcs
+       */
+      context.save(); // * <- new block start
+
+      context.translate(cx, cy); // <- translate to the center
+      context.rotate(-angle);
+
+      context.lineWidth = random.range(5, 20);
+
+      context.beginPath(); // <- draw new shape
+      context.arc(
+        0,
+        0,
+        radius * random.range(0.7, 1.3),
+        slice * random.range(1, -8),
+        slice * random.range(1, 5)
+      ); // <- define the arc slice by slice
+      context.stroke();
+
+      context.restore(); // * <- new block end
     }
   };
 };
