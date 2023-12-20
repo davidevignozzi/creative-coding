@@ -1,17 +1,9 @@
 const canvasSketch = require('canvas-sketch');
+const math = require('canvas-sketch-util/math');
+const random = require('canvas-sketch-util/random');
 
 const settings = {
   dimensions: [1080, 1080]
-};
-
-/**
- * Converts degrees to radiants.
- *
- * @param {number} degrees - The angle in degrees to be converted.
- * @returns {number} The equivalent angle in radiants.
- */
-const degToRad = (degrees) => {
-  return (degrees / 180) * Math.PI;
 };
 
 const sketch = () => {
@@ -45,7 +37,7 @@ const sketch = () => {
      */
 
     for (let i = 0; i < num; i++) {
-      const slice = degToRad(360 / num); // size of the slice
+      const slice = math.degToRad(360 / num); // size of the slice
       const angle = slice * i;
 
       // x = cx + radius * Math.sin(angle);
@@ -68,6 +60,12 @@ const sketch = () => {
       // context.rotate(angle);
       context.rotate(-angle);
 
+      // context.scale(Math.random() * (3 - 1) + 1, 1); // <- scale x = random number between 1 and 3
+      context.scale(random.range(1, 3), 1);
+
+      /**
+       *
+       */
       context.beginPath();
       // context.rect(x, y, w, h); // <- will be at the center left (without transform)
       context.rect(-w * 0.5, -h * 0.5, w, h); // <- if translated (context.translate(x, y)) will be to the center
