@@ -1,11 +1,18 @@
 const canvasSketch = require('canvas-sketch');
 const random = require('canvas-sketch-util/random');
+const math = require('canvas-sketch-util/math');
 
 // ! renamed Point -> Vector
 class Vector {
   constructor(x, y) {
     this.x = x;
     this.y = y;
+  }
+
+  getDistance(v) {
+    const dx = this.x - v.x;
+    const dy = this.y - v.y;
+    return Math.sqrt(dx * dx + dy * dy);
   }
 }
 class Agent {
@@ -64,6 +71,28 @@ const sketch = ({ width, height }) => {
   return ({ context, width, height }) => {
     context.fillStyle = 'white';
     context.fillRect(0, 0, width, height);
+
+    for (let i = 0; i < agents.length; i++) {
+      const agent = agents[i];
+
+      // Foreach agent we go voer other agents
+      // j = i + 1 to not have a duplicate of the line => from 0 to 1 and from 1 to 0
+      for (let j = i + 1; j < agents.length; j++) {
+        const other = agents[j];
+
+        const dist = agent.pos.getDistance(other.pos);
+
+        // Draw the line only if the distance is < 200
+        if (dist > 200) continue;
+
+        // Draw the line
+        context.lineWidth = math.mapRange(dist, 0, 200, 12, 1); // mapRange(value, inputMin, inputMax, ouptutMin, outputMax, clamp = false). Maps the value from one range of [inputMin..inputMax] to another range of [outputMin..outputMax], with min/max being inclusive
+        context.beginPath();
+        context.moveTo(agent.pos.x, agent.pos.y); // <- line start position
+        context.lineTo(other.pos.x, other.pos.y); // <- line end position
+        context.stroke();
+      }
+    }
 
     // const point = { x: 800, y: 400, radius: 10 };
     // const pointA = new Point(800, 400, 10);
